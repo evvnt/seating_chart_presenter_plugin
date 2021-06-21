@@ -1,7 +1,7 @@
-module Voom
+module Coprl
   module Presenters
     module Plugins
-      module GeotixSeatingChart
+      module SeatingChart
         module Components
           class Chart < Base
             attr_reader :chart_key, :public_key, :event_id, :hold_on_select, :pricing,
@@ -21,7 +21,7 @@ module Voom
               @chart_js_url = attribs.fetch(:chart_js_url, Settings.config.chart_js_url)
               @component_options = %i(chart_key public_key event_id hold_on_select pricing currency
                                       locale price_level_tooltip available_categories max_selected_objects)
-              super(type: :geotix_seating_chart, **attribs, &block)
+              super(type: :seating_chart, **attribs, &block)
               expand!
             end
 

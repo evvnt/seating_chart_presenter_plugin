@@ -1,1 +1,1 @@
-require_relative 'voom/presenters/plugins/geotix_seating_chart'
+require_relative 'coprl/presenters/plugins/seating_chart'

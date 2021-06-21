@@ -1,7 +1,7 @@
-module Voom
+module Coprl
   module Presenters
     module Plugins
-      module GeotixSeatingChart
+      module SeatingChart
         module Components
           class Designer < Base
             attr_reader :subaccount_id, :designer_key, :chart_key, :disabled, :readonly,
@@ -22,7 +22,7 @@ module Voom
               @component_options = %i(subaccount_id designer_key chart_key disabled readonly
                                   language chart_js_url open_latest_drawing show_on_update
                                   hide_on_update chart_key_input_id)
-              super(type: :geotix_seating_designer, **attribs, &block)
+              super(type: :seating_designer, **attribs, &block)
               expand!
             end
 

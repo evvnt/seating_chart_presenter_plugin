@@ -1,9 +1,9 @@
-require 'voom/presenters/dsl/components/event_base'
+require 'coprl/presenters/dsl/components/event_base'
 
-module Voom
+module Coprl
   module Presenters
     module Plugins
-      module GeotixSeatingChart
+      module SeatingChart
         module Components
           class Base < DSL::Components::EventBase
 
