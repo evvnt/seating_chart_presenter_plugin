@@ -8,7 +8,7 @@ The available components are Seating Chart, Chart Designer, and Event Manager
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'seating_chart_presenter_plugin', git: 'https://github.com/coprl/seating_chart_presenter_plugin', require: false
+gem 'seating_chart_presenter_plugin', git: 'https://github.com/evvnt/seating_chart_presenter_plugin', require: false
 ```
 
 And then execute:
