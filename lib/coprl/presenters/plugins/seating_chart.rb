@@ -2,6 +2,7 @@ require_relative 'seating_chart/components/base'
 require_relative 'seating_chart/components/chart'
 require_relative 'seating_chart/components/designer'
 require_relative 'seating_chart/components/event_manager'
+require 'dry/configurable'
 
 module Coprl
   module Presenters
