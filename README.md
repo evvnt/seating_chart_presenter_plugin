@@ -1,7 +1,6 @@
-# SeatingChartPresenterPlugin
+# Seating chart Presenter Plugin
 
-A plugin for [voom/presenters](https://github.com/rx/presenters) which
-provides three components for implementing a [Seats.io](https://seats.io) integration.
+A [COPRL](http://github.com/coprl/coprl) presenter plugin that provides three components for implementing a [Seats.io](https://seats.io) integration.
 The available components are Seating Chart, Chart Designer, and Event Manager
 
 ## Installation
@@ -9,25 +8,22 @@ The available components are Seating Chart, Chart Designer, and Event Manager
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'seating_chart_presenter_plugin'
+gem 'seating_chart_presenter_plugin', git: 'https://github.com/evvnt/seating_chart_presenter_plugin', require: false
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
 
-    $ gem install seating_chart_presenter_plugin
-
-## Usage
+## Usage in POMs
 
 #### Seating Chart
 ```ruby
 plugin :seating_chart
 
 content do
-  geotix_seating_chart('[SEATSIO_CHART_KEY]',
+  seating_chart('[SEATSIO_CHART_KEY]',
                        '[SEATSIO.PUBLIC_KEY]',
                        event_id: '[EVENT_ID]', # as a string
                        pricing: [
@@ -44,7 +40,7 @@ end
 plugin :seating_chart
 
 content do
-  geotix_seating_designer('[SUBACCOUNT_ID]',  # Now know as "workspace"
+  seating_designer('[SUBACCOUNT_ID]',  # Now know as "workspace"
                           '[DESIGNER_KEY]',
                            chart_key: '[CHART KEY]',
                            disabled: [],  # list of disabled designer functions ie: 'focalPoint', 'backgroundImage', etc.
@@ -62,23 +58,14 @@ end
 plugin :seating_chart
 
 content do
-  geotix_event_manager('[SUBACCOUNT_ID]', 
+  event_manager('[SUBACCOUNT_ID]', 
                        '[SECRET_KEY]',
                         event_id: '[EVENT_ID]',
                         mode: 'manageObjectStatuses' # or 'manageForSaleConfig'
                       )
 end
 ```
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/chart_presenter_plugin.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+Bug reports and pull requests are welcome on GitHub at https://github.com/evvnt/seating_chart_presenter_plugin.

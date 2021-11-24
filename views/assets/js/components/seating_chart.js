@@ -2,7 +2,7 @@ const ADD_ITEM_EVENT = 'object_selected';
 const REMOVE_ITEM_EVENT = 'object_deselected';
 const HOLD_FAILED_EVENT = 'hold_failed';
 
-class GeotixSeatingChart {
+class SeatingChart {
   constructor(element) {
     console.log('\tSeatingChart');
     this.element = element;
@@ -99,7 +99,7 @@ class GeotixSeatingChart {
 
 }
 
-class GeotixSeatingDesigner {
+class SeatingDesigner {
   constructor(element) {
     console.log('\tSeatingDesigner');
     let data = JSON.parse(element.dataset.designerOptions);
@@ -133,7 +133,7 @@ class GeotixSeatingDesigner {
   }
 }
 
-class GeotixEventManager {
+class EventManager {
   constructor(element) {
     console.log('\tEventManager');
     let data = JSON.parse(element.dataset.managerOptions);
