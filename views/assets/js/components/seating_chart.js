@@ -4,9 +4,10 @@ const HOLD_FAILED_EVENT = 'hold_failed';
 
 class SeatingChart {
   constructor(element) {
-    console.log('\tSeatingChart');
+    console.debug('\tSeatingChart');
     this.element = element;
     this.pricing = JSON.parse(element.dataset.pricing);
+    this.isFullscreen = false;
     let data = JSON.parse(element.dataset.seatingOptions);
     let chartConfig = {
       divId: element.id,
@@ -25,12 +26,16 @@ class SeatingChart {
       priceLevelsTooltipMessage: data.price_level_tooltip,
       maxSelectedObjects: data.max_selected_objects
     };
+
+    // for more events, see https://docs.seats.io/docs/renderer/react-to-events.
     chartConfig.onObjectSelected = this.itemSelectionCallback(ADD_ITEM_EVENT);
     chartConfig.onObjectDeselected = this.itemSelectionCallback(REMOVE_ITEM_EVENT);
     chartConfig.onHoldFailed = this.itemsSelectionCallback(HOLD_FAILED_EVENT);
-    // onHoldTokenExpired
-    // onBestAvailableSelected
-    // onBestAvailableSelectionFailed
+    chartConfig.onFullScreenOpened = () => { this.isFullscreen = true; };
+    chartConfig.onFullScreenClosed = () => { this.isFullscreen = false; };
+
+    this.element.addEventListener('V:eventsStarted', this.disable.bind(this));
+    this.element.addEventListener('V:eventsFinished', this.enable.bind(this));
 
     this.seatingChart = new seatsio.SeatingChart(chartConfig);
     this.seatingChart.render();
@@ -97,11 +102,28 @@ class SeatingChart {
     return this.pricing.find(e => e.category === categoryId).ticketType
   }
 
+  disable() {
+    this.element.setAttribute('disabled', 'disabled');
+
+    // the COPRL loading bar is visible when not in full screen, so check to
+    // see if we need to show the chart's built-in spinner:
+    if (this.isFullscreen) {
+      this.seatingChart.createLoadingScreen();
+    }
+  }
+
+  enable() {
+    this.element.removeAttribute('disabled');
+
+    if (this.isFullscreen) {
+      this.seatingChart.removeLoadingScreen();
+    }
+  }
 }
 
 class SeatingDesigner {
   constructor(element) {
-    console.log('\tSeatingDesigner');
+    console.debug('\tSeatingDesigner');
     let data = JSON.parse(element.dataset.designerOptions);
     let options = {
       divId: element.id,
@@ -135,7 +157,7 @@ class SeatingDesigner {
 
 class EventManager {
   constructor(element) {
-    console.log('\tEventManager');
+    console.debug('\tEventManager');
     let data = JSON.parse(element.dataset.managerOptions);
     new seatsio.EventManager({
       divId: element.id,

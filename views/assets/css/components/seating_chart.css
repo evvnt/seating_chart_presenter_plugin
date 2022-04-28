@@ -1,21 +1,13 @@
-/* Custom CSS for this component - defines a fade in animation*/
-#random_fact {
-    opacity: 0;
+.v-plugin.v-seating_chart > iframe {
+  transition: opacity 250ms ease-out;
 }
 
-#random_fact.load {
-    opacity: 1;
-    animation-name: fadeInOpacity;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-in;
-    animation-duration: 2s;
+.v-plugin.v-seating_chart[disabled] {
+  cursor: not-allowed;
+  user-selection: none;
+  pointer-events: none;
 }
 
-@keyframes fadeInOpacity {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+.v-plugin.v-seating_chart[disabled] > iframe {
+  opacity: 0.50 !important;
 }
