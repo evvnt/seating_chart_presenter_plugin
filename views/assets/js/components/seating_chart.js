@@ -13,7 +13,7 @@ class SeatingChart {
       divId: element.id,
       publicKey: data.public_key,
       event: data.event_id,
-      holdOnSelect: data.hold_on_select,
+      session: data.hold_on_select ? 'continue' : 'none',
       pricing: data.pricing,
       priceFormatter: function (price) {
         let formatter = new Intl.NumberFormat(data.locale, {
