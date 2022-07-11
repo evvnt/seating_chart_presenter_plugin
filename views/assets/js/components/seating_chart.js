@@ -1,18 +1,15 @@
-const ADD_ITEM_EVENT = 'object_selected';
-const REMOVE_ITEM_EVENT = 'object_deselected';
-const HOLD_FAILED_EVENT = 'hold_failed';
-
 class SeatingChart {
   constructor(element) {
-    console.log('\tSeatingChart');
+    console.debug('\tSeatingChart');
     this.element = element;
     this.pricing = JSON.parse(element.dataset.pricing);
+    this.isFullscreen = false;
     let data = JSON.parse(element.dataset.seatingOptions);
     let chartConfig = {
       divId: element.id,
       publicKey: data.public_key,
       event: data.event_id,
-      holdOnSelect: data.hold_on_select,
+      session: data.hold_on_select ? 'continue' : 'none',
       pricing: data.pricing,
       priceFormatter: function (price) {
         let formatter = new Intl.NumberFormat(data.locale, {
@@ -25,12 +22,20 @@ class SeatingChart {
       priceLevelsTooltipMessage: data.price_level_tooltip,
       maxSelectedObjects: data.max_selected_objects
     };
-    chartConfig.onObjectSelected = this.itemSelectionCallback(ADD_ITEM_EVENT);
-    chartConfig.onObjectDeselected = this.itemSelectionCallback(REMOVE_ITEM_EVENT);
-    chartConfig.onHoldFailed = this.itemsSelectionCallback(HOLD_FAILED_EVENT);
-    // onHoldTokenExpired
-    // onBestAvailableSelected
-    // onBestAvailableSelectionFailed
+
+    // for more events, see https://docs.seats.io/docs/renderer/react-to-events.
+    chartConfig.onObjectSelected = this.itemSelectionCallback('object_selected');
+    chartConfig.onHoldSucceeded = this.itemsSelectionCallback('object_held');
+    chartConfig.onHoldFailed = this.itemsSelectionCallback('hold_failed');
+    chartConfig.onObjectDeselected = this.itemSelectionCallback('object_deselected');
+    chartConfig.onReleaseHoldSucceeded = this.itemsSelectionCallback('object_released');
+    chartConfig.onReleaseHoldFailed = this.itemsSelectionCallback('release_failed');
+    chartConfig.onSessionInitialized = (data) => this.dispatchEvent('session_initialized', data);
+    chartConfig.onFullScreenOpened = () => { this.isFullscreen = true; };
+    chartConfig.onFullScreenClosed = () => { this.isFullscreen = false; };
+
+    this.element.addEventListener('V:eventsStarted', this.disable.bind(this));
+    this.element.addEventListener('V:eventsFinished', this.enable.bind(this));
 
     this.seatingChart = new seatsio.SeatingChart(chartConfig);
     this.seatingChart.render();
@@ -39,17 +44,14 @@ class SeatingChart {
   // Callback for single object selection/deselection
   itemSelectionCallback(eventName) {
     return (object, ticketType) => {
-      const payload = Object.assign({}, this.parseObject(object, ticketType))
-      let event = new CustomEvent(eventName, {composed: true, detail: payload});
-      this.element.dispatchEvent(event);
+      this.dispatchEvent(eventName, this.parseObject(object, ticketType));
     }
   }
 
   // Callback for multiple object selection/deselection
   itemsSelectionCallback(eventName) {
-    return (objects) => {
-      let event = new CustomEvent(eventName, {composed: true, detail: {objects: objects}});
-      this.element.dispatchEvent(event);
+    return (objects, ticketTypes) => {
+      this.dispatchEvent(eventName, this.parseObject(objects[0], ticketTypes[0]));
     }
   }
 
@@ -72,7 +74,7 @@ class SeatingChart {
       seat: object.labels.own,
       row: object.labels.parent,
       section: object.labels.section,
-      price_level_name: ticketType === undefined ? this.findDefaultPriceLevel(object.category.key) : ticketType.ticketType,
+      price_level_name: ticketType ? ticketType.ticketType : this.findDefaultPriceLevel(object.category.key),
       object_type: object.objectType,
       hold_token: object.chart.holdToken,
       quantity: object.objectType === 'GeneralAdmissionArea' ? 1 : null
@@ -97,11 +99,34 @@ class SeatingChart {
     return this.pricing.find(e => e.category === categoryId).ticketType
   }
 
+  dispatchEvent(name, data = undefined) {
+    console.debug(`SeatingChart: dispatch event: ${name}`);
+    const event = new CustomEvent(name, {composed: true, detail: data});
+    this.element.dispatchEvent(event);
+  }
+
+  disable() {
+    this.element.setAttribute('disabled', 'disabled');
+
+    // the COPRL loading bar is visible when not in full screen, so check to
+    // see if we need to show the chart's built-in spinner:
+    if (this.isFullscreen) {
+      this.seatingChart.createLoadingScreen();
+    }
+  }
+
+  enable() {
+    this.element.removeAttribute('disabled');
+
+    if (this.isFullscreen) {
+      this.seatingChart.removeLoadingScreen();
+    }
+  }
 }
 
 class SeatingDesigner {
   constructor(element) {
-    console.log('\tSeatingDesigner');
+    console.debug('\tSeatingDesigner');
     let data = JSON.parse(element.dataset.designerOptions);
     let options = {
       divId: element.id,
@@ -135,7 +160,7 @@ class SeatingDesigner {
 
 class EventManager {
   constructor(element) {
-    console.log('\tEventManager');
+    console.debug('\tEventManager');
     let data = JSON.parse(element.dataset.managerOptions);
     new seatsio.EventManager({
       divId: element.id,
