@@ -1,3 +1,11 @@
+## [1.1.1](https://github.com/evvnt/seating_chart_presenter_plugin/compare/v1.1.0...v1.1.1) (2023-08-25)
+
+
+### Bug Fixes
+
+* update Semantic release action version ([275e13e](https://github.com/evvnt/seating_chart_presenter_plugin/commit/275e13ed1762227307a2d1c5472d9743a5938fc2))
+* Use the seat object's label as section if it is a GeneralAdmissionArea ([1517e32](https://github.com/evvnt/seating_chart_presenter_plugin/commit/1517e325206b1f04e6d911e8c8caa2a00b2aa780))
+
 # [1.1.0](https://github.com/evvnt/seating_chart_presenter_plugin/compare/v1.0.0...v1.1.0) (2022-07-11)
 
 
