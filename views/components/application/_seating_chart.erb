@@ -2,7 +2,7 @@
   <div id="<%= comp.id %>"
        class="v-plugin v-input v-seating_chart"
        data-plugin-callback="SeatingChart"
-       data-seating-options="<%= raw h expand_hash(comp.chart_options).to_json %>"
-       data-pricing="<%= raw h comp.pricing.to_json %>"
+       data-seating-options="<%= h expand_hash(comp.chart_options).to_json %>"
+       data-pricing="<%= h comp.pricing.to_json %>"
        <%= partial "components/event", locals: {comp: comp, events: comp.events, parent_id: comp.event_parent_id} %>></div>
 </form>
