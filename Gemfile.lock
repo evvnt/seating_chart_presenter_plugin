@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     seating_chart_presenter_plugin (1.1.1)
-      dry-configurable (> 0.1, <= 7.0)
+      dry-configurable (>= 0.13)
 
 GEM
   remote: https://rubygems.org/
@@ -24,4 +24,4 @@ DEPENDENCIES
   seating_chart_presenter_plugin!
 
 BUNDLED WITH
-   2.4.18
+   2.4.22
