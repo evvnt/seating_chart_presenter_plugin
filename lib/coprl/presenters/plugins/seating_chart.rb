@@ -11,7 +11,7 @@ module Coprl
 
         class Settings
           extend Dry::Configurable
-          setting :chart_js_url, 'https://cdn.seatsio.net/chart.js'
+          setting :chart_js_url, default: 'https://cdn.seatsio.net/chart.js'
         end
 
         module DSLComponents
