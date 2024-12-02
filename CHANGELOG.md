@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/evvnt/seating_chart_presenter_plugin/compare/v1.1.1...v1.2.0) (2024-12-02)
+
+
+### Features
+
+* Ensure dry configurable is >=0.13 ([34f4ae0](https://github.com/evvnt/seating_chart_presenter_plugin/commit/34f4ae04fb11de4e91ab089afdf0e98cda9a5be3))
+
 ## [1.1.1](https://github.com/evvnt/seating_chart_presenter_plugin/compare/v1.1.0...v1.1.1) (2023-08-25)
 
 
