@@ -51,7 +51,11 @@ class SeatingChart {
   // Callback for multiple object selection/deselection
   itemsSelectionCallback(eventName) {
     return (objects, ticketTypes) => {
-      this.dispatchEvent(eventName, this.parseObject(objects[0], ticketTypes[0]));
+      // The set of selected objects is homogeneous, so only the first object is parsed.
+      const data = this.parseObject(objects[0], ticketTypes[0]);
+      data.quantity = objects.length;
+
+      this.dispatchEvent(eventName, data);
     }
   }
 
