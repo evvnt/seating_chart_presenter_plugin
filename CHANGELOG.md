@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/evvnt/seating_chart_presenter_plugin/compare/v1.2.0...v1.2.1) (2025-02-25)
+
+
+### Bug Fixes
+
+* Fix object_held "quantity" parameter ([19f2de1](https://github.com/evvnt/seating_chart_presenter_plugin/commit/19f2de1b05a6230ff42d37e623982f62a71f88dd))
+
 # [1.2.0](https://github.com/evvnt/seating_chart_presenter_plugin/compare/v1.1.1...v1.2.0) (2024-12-02)
 
 
