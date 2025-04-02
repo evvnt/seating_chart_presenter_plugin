@@ -1,0 +1,21 @@
+version: 2
+registries:
+  rubygems-server-enterprise-contribsys-com:
+    type: rubygems-server
+    url: https://enterprise.contribsys.com
+    username: "${{secrets.RUBYGEMS_SERVER_ENTERPRISE_CONTRIBSYS_COM_USERNAME}}"
+    password: "${{secrets.RUBYGEMS_SERVER_ENTERPRISE_CONTRIBSYS_COM_PASSWORD}}"
+
+updates:
+- package-ecosystem: bundler
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "10:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: dry-configurable
+    versions:
+    - 0.12.0
+  registries:
+  - rubygems-server-enterprise-contribsys-com
