@@ -44,32 +44,48 @@ class SeatingChart {
   // Callback for single object selection/deselection
   itemSelectionCallback(eventName) {
     return (object, ticketType) => {
-      this.dispatchEvent(eventName, this.parseObject(object, ticketType));
+      const item = this.parseObject(object, ticketType, 1);
+      const data = {items: [item]};
+
+      this.dispatchEvent(eventName, data);
     }
   }
 
   // Callback for multiple object selection/deselection
   itemsSelectionCallback(eventName) {
     return (objects, ticketTypes) => {
-      // The set of selected objects is homogeneous, so only the first object is parsed.
-      const data = this.parseObject(objects[0], ticketTypes[0]);
-      data.quantity = objects.length;
+      // Group by price level, summing quantity:
+      const selectedItems = {};
 
+      for (let i = 0; i < objects.length; i++) {
+        const object = objects[i];
+        const ticketType = ticketTypes[i];
+        const name = ticketType?.ticketType || object.id; // Handles GA and reserved seats
+        const item = this.parseObject(object, ticketType, 0);
+
+        if (!selectedItems[name]) {
+          selectedItems[name] = item;
+        }
+
+        selectedItems[name].quantity += 1
+      }
+
+      const data = {items: Object.values(selectedItems)};
       this.dispatchEvent(eventName, data);
     }
   }
 
-  parseObject(object, ticketType) {
+  parseObject(object, ticketType, quantity) {
     if (object.objectType === 'Table') {
       return this.parseTableObject(object, ticketType);
     }
     else {
-      return this.parseSeatObject(object, ticketType);
+      return this.parseSeatObject(object, ticketType, quantity);
     }
   }
 
   // Translate a Seatsio object into the parameters expected by the cart
-  parseSeatObject(object, ticketType) {
+  parseSeatObject(object, ticketType, quantity = 1) {
     return {
       primary_uuid: object.uuid,
       item_id: object.uuid,
@@ -81,7 +97,7 @@ class SeatingChart {
       price_level_name: ticketType ? ticketType.ticketType : this.findDefaultPriceLevel(object.category.key),
       object_type: object.objectType,
       hold_token: object.chart.holdToken,
-      quantity: object.objectType === 'GeneralAdmissionArea' ? 1 : null
+      quantity: object.objectType === 'GeneralAdmissionArea' ? quantity : null
     };
   }
 
