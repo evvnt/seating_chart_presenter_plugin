@@ -70,7 +70,8 @@ class SeatingChart {
 
   // Translate a Seatsio object into the parameters expected by the cart
   parseSeatObject(object, ticketType) {
-    return {
+    const selectedPriceLevel = this.parseTicketType(object, ticketType);
+    const selectedSeat = {
       primary_uuid: object.uuid,
       item_id: object.uuid,
       ticket_type_id: object.category.key,
@@ -78,11 +79,11 @@ class SeatingChart {
       seat: object.objectType === 'GeneralAdmissionArea' ? null : object.labels.own,
       row: object.labels.parent,
       section: object.objectType === 'GeneralAdmissionArea' ? object.labels.own : object.labels.section,
-      price_level_name: ticketType ? ticketType.ticketType : this.findDefaultPriceLevel(object.category.key),
       object_type: object.objectType,
       hold_token: object.chart.holdToken,
       quantity: object.objectType === 'GeneralAdmissionArea' ? 1 : null
     };
+    return {...selectedSeat, ...selectedPriceLevel};
   }
 
   parseTableObject(object, ticketType) {
@@ -96,6 +97,15 @@ class SeatingChart {
       object_type: object.objectType,
       hold_token: object.chart.holdToken,
       seats: seats
+    }
+  }
+
+  parseTicketType(object, ticketType) {
+    if (ticketType) {
+      return { ticket_type_price_level_id: ticketType.ticketType }
+    } else {
+      // No ticket type means a "simple" category-only pricing configuration
+      return { price_level_name: this.findDefaultPriceLevel(object.category.key) }
     }
   }
 
